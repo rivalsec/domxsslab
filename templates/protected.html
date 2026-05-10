@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Protected Page — Server-side WAF + DOM XSS Sinks{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2 style="color:#3fb950">&#x1f6e1; Protected Page</h2>
+<p style="margin-bottom:16px">
+JS reads <code>?input=</code> via <code>URLSearchParams</code> and feeds it into vulnerable sinks.<br>
+The backend checks the <code>input</code> param — if malicious, a block page is shown instead.<br>
+Challenge: bypass the server-side WAF to reach this page with a working payload.
+</p>
+
+<div class="card">
+<pre>Try: ?input=&lt;img src=x onerror=alert(1)&gt;
+Try: ?input=&lt;script&gt;alert(1)&lt;/script&gt;
+Try: ?input=javascript:alert(1)
+Try: ?input=&lt;svg/onload=alert(1)&gt;
+Try: ?input=hello (safe — passes through)</pre>
+</div>
+
+<div class="card">
+<h3>Blacklist patterns (server-side WAF)</h3>
+<pre style="font-size:11px">&lt;script  on*=  javascript:  &lt;img  &lt;svg  &lt;iframe  &lt;object  &lt;embed
+&lt;link  &lt;style  &lt;math  &lt;video  &lt;audio  &lt;body  &lt;details  &lt;marquee
+eval(  alert(  prompt(  confirm(  document.  window[./  .cookie
+data:  vbscript:  expression(  url(</pre>
+</div>
+
+<!-- 1. innerHTML -->
+<div class="card">
+<h3>1. innerHTML <span class="badge html">HTML</span></h3>
+<div class="output" id="out-html"></div>
+</div>
+
+<!-- 2. outerHTML -->
+<div class="card">
+<h3>2. outerHTML <span class="badge html">HTML</span></h3>
+<div class="output"><span id="out-outer">original</span></div>
+</div>
+
+<!-- 3. insertAdjacentHTML -->
+<div class="card">
+<h3>3. insertAdjacentHTML <span class="badge html">HTML</span></h3>
+<div class="output" id="out-adjacent"></div>
+</div>
+
+<!-- 4. document.write (in iframe) -->
+<div class="card">
+<h3>4. document.write <span class="badge html">HTML</span></h3>
+<iframe id="out-write" class="output" style="width:100%;height:80px;border:1px dashed #30363d"></iframe>
+</div>
+
+<!-- 5. eval -->
+<div class="card">
+<h3>5. eval() <span class="badge js">JS</span></h3>
+<pre class="output" id="out-eval"></pre>
+</div>
+
+<!-- 6. new Function() -->
+<div class="card">
+<h3>6. new Function() <span class="badge js">JS</span></h3>
+<pre class="output" id="out-func"></pre>
+</div>
+
+<!-- 7. setTimeout -->
+<div class="card">
+<h3>7. setTimeout(string) <span class="badge js">JS</span></h3>
+<pre class="output" id="out-timeout">waiting...</pre>
+</div>
+
+<!-- 8. a.href -->
+<div class="card">
+<h3>8. a.href <span class="badge attr">ATTR</span></h3>
+<div class="output"><a id="out-href" href="#">click after injection</a></div>
+</div>
+
+<!-- 9. iframe.src -->
+<div class="card">
+<h3>9. iframe.src <span class="badge attr">ATTR</span></h3>
+<iframe id="out-src" class="output" style="width:100%;height:80px;border:1px dashed #30363d"></iframe>
+</div>
+
+<!-- 10. setAttribute onclick -->
+<div class="card">
+<h3>10. setAttribute('onclick') <span class="badge attr">ATTR</span></h3>
+<div class="output" id="out-attr" style="cursor:pointer;padding:20px;text-align:center" tabindex="0">
+    click me after injection
+</div>
+</div>
+
+<script>
+(function() {
+    var val = new URLSearchParams(location.search).get('input');
+    if (!val) return;
+
+    // 1. innerHTML
+    document.getElementById('out-html').innerHTML = val;
+
+    // 2. outerHTML
+    document.getElementById('out-outer').outerHTML = val;
+
+    // 3. insertAdjacentHTML
+    document.getElementById('out-adjacent').insertAdjacentHTML('beforeend', val);
+
+    // 4. document.write
+    var wf = document.getElementById('out-write');
+    wf.contentDocument.open();
+    wf.contentDocument.write(val);
+    wf.contentDocument.close();
+
+    // 5. eval
+    try {
+        var r = eval(val);
+        document.getElementById('out-eval').textContent = 'eval returned: ' + r;
+    } catch(e) {
+        document.getElementById('out-eval').textContent = 'eval error: ' + e.message;
+    }
+
+    // 6. new Function()
+    try {
+        var r2 = new Function(val)();
+        document.getElementById('out-func').textContent = 'Function returned: ' + r2;
+    } catch(e) {
+        document.getElementById('out-func').textContent = 'Function error: ' + e.message;
+    }
+
+    // 7. setTimeout
+    setTimeout(val, 0);
+    document.getElementById('out-timeout').textContent = 'setTimeout fired: ' + val;
+
+    // 8. a.href
+    document.getElementById('out-href').href = val;
+    document.getElementById('out-href').textContent = 'Link: ' + val;
+
+    // 9. iframe.src
+    document.getElementById('out-src').src = val;
+
+    // 10. setAttribute
+    document.getElementById('out-attr').setAttribute('onclick', val);
+})();
+</script>
+{% endblock %}

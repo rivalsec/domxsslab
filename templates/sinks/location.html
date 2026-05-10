@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}location Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge url">URL</span> location.assign / replace / href</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?url=</code> or <code>?sink=assign|replace|href</code></p>
+<p><b>Sinks:</b></p>
+<ul>
+  <li><code>location.assign(userInput)</code></li>
+  <li><code>location.replace(userInput)</code></li>
+  <li><code>location.href = userInput</code></li>
+</ul>
+<pre>Try: ?url=javascript:alert('location')&amp;sink=assign
+Try: ?url=javascript:alert('location')&amp;sink=replace
+Try: ?url=javascript:alert('location')&amp;sink=href</pre>
+<p class="warn">⚠ These will navigate away from the page</p>
+<input id="inp" placeholder="Enter URL...">
+<select id="sink">
+  <option value="assign">location.assign()</option>
+  <option value="replace">location.replace()</option>
+  <option value="href">location.href =</option>
+</select>
+<button onclick="trigger()">Execute</button>
+</div>
+<script>
+function getSource() {
+    return document.getElementById('inp').value ||
+           new URLSearchParams(location.search).get('url');
+}
+function trigger() {
+    var val = getSource();
+    var sink = document.getElementById('sink').value;
+    if (sink === 'assign')  location.assign(val);
+    if (sink === 'replace') location.replace(val);
+    if (sink === 'href')    location.href = val;
+}
+(function() {
+    var params = new URLSearchParams(location.search);
+    var val = params.get('url');
+    if (val) {
+        var sink = params.get('sink') || 'assign';
+        if (sink === 'assign')  location.assign(val);
+        if (sink === 'replace') location.replace(val);
+        if (sink === 'href')    location.href = val;
+    }
+})();
+</script>
+{% endblock %}

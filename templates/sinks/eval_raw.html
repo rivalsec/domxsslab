@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}eval() Raw URL Param{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> eval() — raw URL parameter (not decoded)</h2>
+<div class="card">
+<p><b>Source:</b> <code>?input=</code> query parameter (raw, not URL-decoded)</p>
+<p><b>Sink:</b> raw param injected into a single-quoted string inside <code>eval()</code></p>
+<pre>Try: ?input=';alert('eval_raw')//</pre>
+<h3>Constructed code:</h3>
+<pre class="output" id="code-display"></pre>
+<h3>Result:</h3>
+<pre class="output" id="output"></pre>
+</div>
+<script>
+function processUserData(data) {
+    document.getElementById('output').textContent = 'processUserData received: ' + data;
+}
+
+// Get raw param without decoding
+var raw = (location.href.match(/[?&]input=([^&]*)/) || [])[1] || 'none';
+
+var code = "var msg = '" + raw + "'; processUserData(msg);";
+
+document.getElementById('code-display').textContent = code;
+
+try {
+    eval(code);
+} catch(e) {
+    document.getElementById('output').textContent = 'Error: ' + e.message;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}DOM XSS Lab{% endblock %}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:monospace;background:#0d1117;color:#c9d1d9;padding:20px}
+h1,h2,h3{color:#58a6ff;margin-bottom:12px}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto}
+.card{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:16px;margin-bottom:16px}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:12px;margin-right:6px}
+.html{background:#da3633;color:#fff}
+.js{background:#d29922;color:#000}
+.url{background:#3fb950;color:#000}
+.attr{background:#a371f7;color:#fff}
+.msg{background:#1f6feb;color:#fff}
+.jquery{background:#0969da;color:#fff}
+input,textarea{background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:4px;width:100%;margin:8px 0;font-family:monospace}
+button{background:#238636;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-family:monospace}
+button:hover{background:#2ea043}
+pre{background:#0d1117;border:1px solid #30363d;padding:12px;border-radius:4px;overflow-x:auto;margin:8px 0;white-space:pre-wrap}
+.output{min-height:40px;border:1px dashed #30363d;padding:12px;margin:8px 0;border-radius:4px}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.back{margin-bottom:16px;display:inline-block}
+.warn{background:#d29922;color:#000;padding:8px;border-radius:4px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="container">
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>

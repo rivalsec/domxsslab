@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}iframe.src Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge attr">ATTR</span> iframe.src</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?url=</code> or input</p>
+<p><b>Sink:</b> <code>iframe.src = userInput</code></p>
+<pre>Try: ?url=javascript:alert('iframe.src')</pre>
+<input id="inp" placeholder="Enter URL...">
+<button onclick="trigger()">Set src</button>
+<h3>Output:</h3>
+<iframe id="target" class="output" style="width:100%;height:150px;border:1px dashed #30363d"></iframe>
+</div>
+<script>
+function trigger() {
+    var val = document.getElementById('inp').value ||
+              new URLSearchParams(location.search).get('url');
+    document.getElementById('target').src = val;
+}
+(function() {
+    var val = new URLSearchParams(location.search).get('url');
+    if (val) { document.getElementById('target').src = val; }
+})();
+</script>
+{% endblock %}

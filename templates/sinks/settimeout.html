@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}setTimeout Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> setTimeout() — delayed action builder</h2>
+<div class="card">
+<p><b>Source:</b> <code>?delay_action=</code> query parameter</p>
+<p><b>Sink:</b> param concatenated into a string passed to <code>setTimeout(string, ms)</code></p>
+<pre>The page builds a "delayed notification" command by inserting the
+delay_action param into a code string for setTimeout.
+
+Try: ?delay_action=');alert('setTimeout
+Try: ?delay_action=1');alert(1);//</pre>
+<h3>Constructed code:</h3>
+<pre class="output" id="code-display"></pre>
+<h3>Status:</h3>
+<pre class="output" id="output">waiting...</pre>
+</div>
+<script>
+function showNotification(msg) {
+    document.getElementById('output').textContent = 'Notification: ' + msg;
+}
+
+var action = new URLSearchParams(location.search).get('delay_action') || 'default';
+
+var code = "showNotification('" + action + "')";
+
+document.getElementById('code-display').textContent = code;
+
+setTimeout(code, 500);
+</script>
+{% endblock %}

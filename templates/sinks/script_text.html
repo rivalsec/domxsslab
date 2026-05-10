@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}script.textContent Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> script.textContent — config injection</h2>
+<div class="card">
+<p><b>Source:</b> <code>?config=</code> query parameter</p>
+<p><b>Sink:</b> param injected into a JS config object string → dynamically created <code>&lt;script&gt;</code></p>
+<pre>The page builds a config object as JS source code, inserting the
+config param as a "theme" value, then creates a script element.
+
+Try: ?config=";alert('script.textContent');//
+Try: ?config="+alert(1)+"</pre>
+<h3>Constructed script:</h3>
+<pre class="output" id="code-display"></pre>
+<h3>Result:</h3>
+<pre class="output" id="output"></pre>
+</div>
+<script>
+function applyConfig(cfg) {
+    document.getElementById('output').textContent = 'Config applied: theme=' + cfg.theme + ', lang=' + cfg.lang;
+}
+
+var theme = new URLSearchParams(location.search).get('config') || 'dark';
+
+var code = 'var cfg = {\n'
+    + '  theme: "' + theme + '",\n'
+    + '  lang: "en",\n'
+    + '  debug: false\n'
+    + '};\n'
+    + 'applyConfig(cfg);';
+
+document.getElementById('code-display').textContent = code;
+
+var s = document.createElement('script');
+s.textContent = code;
+document.body.appendChild(s);
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}innerHTML (hash only){% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge html">HTML</span> innerHTML — hash only</h2>
+<div class="card">
+<p><b>Source:</b> URL hash <code>#payload</code></p>
+<p><b>Sink:</b> <code>element.innerHTML = hash</code></p>
+<pre>Try: #&lt;img src=x onerror=alert('hash_innerhtml')&gt;</pre>
+<h3>Output:</h3>
+<div class="output" id="output"></div>
+</div>
+<script>
+function trigger() {
+    if (location.hash) {
+        document.getElementById('output').innerHTML = decodeURIComponent(location.hash.slice(1));
+    }
+}
+window.onload = trigger;
+window.onhashchange = trigger;
+</script>
+{% endblock %}

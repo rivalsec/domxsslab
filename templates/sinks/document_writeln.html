@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}document.writeln Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge html">HTML</span> document.writeln()</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?input=</code></p>
+<p><b>Sink:</b> <code>document.writeln(userInput)</code></p>
+<pre>Try: ?input=&lt;svg onload=alert('writeln')&gt;</pre>
+<input id="inp" placeholder="Enter HTML payload...">
+<button onclick="trigger()">Inject</button>
+</div>
+<script>
+function trigger() {
+    document.writeln(document.getElementById('inp').value);
+}
+(function() {
+    var params = new URLSearchParams(location.search);
+    var val = params.get('input');
+    if (val) { document.writeln(val); }
+})();
+</script>
+{% endblock %}

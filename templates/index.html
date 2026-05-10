@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}DOM XSS Lab — Index{% endblock %}
+{% block content %}
+<h1>DOM XSS Sink Lab</h1>
+<p style="margin-bottom:20px">Intentionally vulnerable pages for security testing & education.<br>
+Each page reads user input from <code>location.hash</code>, <code>?input=</code>, or a text field and passes it to a dangerous sink.<br>
+<a href="/sitemap">Sitemap — full list of all pages</a></p>
+
+<h2 style="color:#3fb950">&#x1f6e1; Protected Page</h2>
+<div class="card" style="border-color:#3fb950">
+<div class="nav">
+  <a href="/protected" style="color:#3fb950">Server-side sanitized page — try to bypass</a>
+</div>
+</div>
+
+<h2><span class="badge html">Reflected</span> Reflected XSS</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/reflected-html">HTML context</a>
+  <a href="/sink/reflected-script">Script context</a>
+</div>
+</div>
+
+<h2><span class="badge html">HTML</span> HTML Injection Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/innerhtml">innerHTML</a>
+  <a href="/sink/innerhtml-hash">innerHTML (hash only)</a>
+  <a href="/sink/outerhtml">outerHTML</a>
+  <a href="/sink/document-write">document.write</a>
+  <a href="/sink/document-writeln">document.writeln</a>
+  <a href="/sink/insertadjacenthtml">insertAdjacentHTML</a>
+  <a href="/sink/domparser">DOMParser</a>
+  <a href="/sink/createcontextualfragment">createContextualFragment</a>
+</div>
+</div>
+
+<h2><span class="badge attr">ATTR</span> Attribute / Property Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/href">a.href (javascript:)</a>
+  <a href="/sink/src">iframe.src</a>
+  <a href="/sink/action">form.action</a>
+  <a href="/sink/setattribute">setAttribute</a>
+  <a href="/sink/style">element.style</a>
+</div>
+</div>
+
+<h2><span class="badge js">JS</span> JavaScript Execution Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/eval">eval()</a>
+  <a href="/sink/eval-raw">eval() raw param</a>
+  <a href="/sink/function-constructor">new Function()</a>
+  <a href="/sink/settimeout">setTimeout(string)</a>
+  <a href="/sink/setinterval">setInterval(string)</a>
+  <a href="/sink/script-src">script.src</a>
+  <a href="/sink/script-text">script.textContent</a>
+</div>
+</div>
+
+<h2><span class="badge url">URL</span> URL / Navigation Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/location">location assign/replace</a>
+  <a href="/sink/open">window.open</a>
+</div>
+</div>
+
+<h2><span class="badge msg">MSG</span> Message / Storage Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/postmessage">postMessage</a>
+  <a href="/sink/websocket">WebSocket (simulated)</a>
+</div>
+</div>
+
+<h2><span class="badge jquery">jQuery</span> jQuery Sinks</h2>
+<div class="card">
+<div class="nav">
+  <a href="/sink/jquery-html">$.html()</a>
+  <a href="/sink/jquery-append">$.append()</a>
+  <a href="/sink/jquery-selector">$(selector)</a>
+</div>
+</div>
+{% endblock %}

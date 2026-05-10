@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Sitemap — All Pages{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2>Sitemap ({{ links|length }} pages)</h2>
+<div class="card">
+{% for link in links %}
+<div><a href="{{ link }}">{{ link }}</a></div>
+{% endfor %}
+</div>
+
+<h2>Plain text (absolute URLs)</h2>
+<div class="card">
+<pre id="urls">{% for link in links %}{{ base_url }}{{ link }}
+{% endfor %}</pre>
+<button onclick="navigator.clipboard.writeText(document.getElementById('urls').textContent.trim())">Copy</button>
+</div>
+{% endblock %}

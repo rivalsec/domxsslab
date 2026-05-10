@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}BLOCKED — WAF{% endblock %}
+{% block content %}
+<a class="back" href="/protected">&larr; Back to protected page</a>
+<div style="text-align:center;padding:60px 20px">
+<h1 style="color:#da3633;font-size:48px">403</h1>
+<h2 style="color:#da3633">Request Blocked</h2>
+<p style="margin:20px 0;color:#8b949e">Your input was flagged as malicious by the server-side WAF and has been blocked.</p>
+<div class="card" style="border-color:#da3633;text-align:left;max-width:600px;margin:20px auto">
+<h3>Blocked input:</h3>
+<pre>{{ raw }}</pre>
+</div>
+<p style="color:#8b949e">The page with vulnerable sinks was never rendered.<br>Try to bypass the filter.</p>
+<a href="/protected" style="color:#58a6ff">&larr; Try again</a>
+</div>
+{% endblock %}

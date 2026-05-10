@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Function() Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> new Function() — template builder</h2>
+<div class="card">
+<p><b>Source:</b> <code>?name=</code> query parameter</p>
+<p><b>Sink:</b> param concatenated into a Function body string → <code>new Function(body)()</code></p>
+<pre>The page builds a greeting function by inserting the "name" param
+into a string template, then compiles it via new Function().
+
+Try: ?name=";alert('Function');//
+Try: ?name="+alert(1)+"</pre>
+<h3>Constructed function body:</h3>
+<pre class="output" id="code-display"></pre>
+<h3>Result:</h3>
+<pre class="output" id="output"></pre>
+</div>
+<script>
+var userName = new URLSearchParams(location.search).get('name') || 'guest';
+
+var body = 'var greeting = "Hello, ' + userName + '!";\n'
+    + 'return greeting;';
+
+document.getElementById('code-display').textContent = body;
+
+try {
+    var fn = new Function(body);
+    var result = fn();
+    document.getElementById('output').textContent = result;
+} catch(e) {
+    document.getElementById('output').textContent = 'Error: ' + e.message;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}a.href Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge attr">ATTR</span> a.href (javascript: protocol)</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?url=</code> or input</p>
+<p><b>Sink:</b> <code>a.href = userInput</code></p>
+<pre>Try: ?url=javascript:alert('href')</pre>
+<input id="inp" placeholder="Enter URL...">
+<button onclick="trigger()">Set href</button>
+<h3>Output:</h3>
+<div class="output"><a id="target" href="#">Click me after injection</a></div>
+</div>
+<script>
+function trigger() {
+    var val = document.getElementById('inp').value ||
+              new URLSearchParams(location.search).get('url');
+    document.getElementById('target').href = val;
+}
+(function() {
+    var val = new URLSearchParams(location.search).get('url');
+    if (val) {
+        document.getElementById('target').href = val;
+    }
+})();
+</script>
+{% endblock %}

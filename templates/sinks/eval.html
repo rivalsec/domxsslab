@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}eval() Sink{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge js">JS</span> eval() — string injection in code construction</h2>
+<div class="card">
+<p><b>Source:</b> <code>?input=</code> query parameter</p>
+<p><b>Sink:</b> param concatenated into a string inside constructed code → <code>eval(code)</code></p>
+<pre>The page builds a JS function body by inserting the input param
+as a "referrer" value into a string variable, then eval's the block.
+
+Try: ?input=";alert('eval');//
+Try: ?input="+alert(document.domain)+"</pre>
+<h3>Constructed code:</h3>
+<pre class="output" id="code-display"></pre>
+<h3>Result:</h3>
+<pre class="output" id="output"></pre>
+</div>
+<script>
+function processUserData(data) {
+    document.getElementById('output').textContent = 'processUserData received: ' + data;
+}
+
+var referrer = new URLSearchParams(location.search).get('input') || 'none';
+
+// Build code string — injection point inside double-quoted string
+var code = 'function handleRequest(){\n'
+    + '  var url = "' + referrer + '";\n'
+    + '  var ts = Date.now();\n'
+    + '  processUserData(url);\n'
+    + '}';
+
+document.getElementById('code-display').textContent = code;
+
+try {
+    eval(code);
+    handleRequest();
+} catch(e) {
+    document.getElementById('output').textContent = 'Error: ' + e.message;
+}
+</script>
+{% endblock %}

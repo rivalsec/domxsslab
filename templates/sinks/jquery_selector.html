@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}$(selector) Sink{% endblock %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge jquery">jQuery</span> $(userInput) — selector injection</h2>
+<div class="card">
+<p><b>Source:</b> URL hash or input</p>
+<p><b>Sink:</b> <code>$(userInput)</code> — when input starts with <code>&lt;</code>, jQuery creates DOM elements</p>
+<pre>Try: #&lt;img src=x onerror=alert('$()')&gt;</pre>
+<p class="warn">⚠ In older jQuery (&lt;3.0), even without leading &lt;, injection was possible via selector context</p>
+<input id="inp" placeholder="Enter selector / HTML...">
+<button onclick="trigger()">Execute $()</button>
+<h3>Output:</h3>
+<div class="output" id="output"></div>
+</div>
+<script>
+function getSource() {
+    return document.getElementById('inp').value ||
+           new URLSearchParams(location.search).get('input') ||
+           (location.hash ? decodeURIComponent(location.hash.slice(1)) : '');
+}
+function trigger() {
+    var val = getSource();
+    // Vulnerable: user input passed directly to $()
+    var el = $(val);
+    $('#output').append(el);
+}
+if (location.hash || new URLSearchParams(location.search).get('input')) { $(trigger); }
+</script>
+{% endblock %}
