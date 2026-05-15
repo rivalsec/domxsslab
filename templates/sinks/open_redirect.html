@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}DOM Open Redirect{% endblock %}
+{% block content %}
+<a class="back" href="/">&larr; Back</a>
+<h2><span class="badge url">URL</span> DOM Open Redirect</h2>
+<div class="card">
+<p><b>Source:</b> URL query <code>?next=</code> or <code>?returnUrl=</code> or <code>#next=</code></p>
+<p><b>Sink:</b> <code>location.href = userControlledUrl</code> after "login"</p>
+<pre>Try: ?next=https://example.com
+Try: ?returnUrl=//example.com
+Try: #next=https://example.com</pre>
+<p class="warn">⚠ Submitting will navigate the page to the target URL</p>
+<input id="inp" placeholder="Enter redirect target (e.g. https://example.com)">
+<button onclick="trigger()">Log in &amp; continue</button>
+</div>
+<script>
+function getSource() {
+    var fromHash = '';
+    if (location.hash) {
+        var h = new URLSearchParams(location.hash.slice(1));
+        fromHash = h.get('next') || h.get('returnUrl') || '';
+    }
+    var qs = new URLSearchParams(location.search);
+    return document.getElementById('inp').value ||
+           qs.get('next') ||
+           qs.get('returnUrl') ||
+           fromHash;
+}
+function trigger() {
+    var target = getSource();
+    if (target) location.href = target;
+}
+(function() {
+    var target = getSource();
+    if (target) location.href = target;
+})();
+</script>
+{% endblock %}

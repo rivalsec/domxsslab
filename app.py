@@ -128,6 +128,11 @@ def sink_open():
     return render_template("sinks/open.html")
 
 
+@app.route("/sink/open-redirect")
+def sink_open_redirect():
+    return render_template("sinks/open_redirect.html")
+
+
 # ---------- Storage / message sinks ----------
 @app.route("/sink/postmessage")
 def sink_postmessage():
